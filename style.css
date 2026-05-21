@@ -931,8 +931,9 @@ body:has(.modal.active) {
     -webkit-backdrop-filter: blur(8px);
     z-index: 1000;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 40px 20px;
     opacity: 0;
     pointer-events: none;
