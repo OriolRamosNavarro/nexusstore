@@ -54,7 +54,7 @@ const DEFAULT_ORDERS = [
 const State = {
     products: [],
     orders: [],
-    lemonSettings: {
+    checkoutSettings: {
         overlayMode: true
     },
     currentCheckoutProduct: null,
@@ -84,9 +84,9 @@ const State = {
         }
 
         // Load Settings
-        const storedSettings = localStorage.getItem("nexus_lemon_settings");
+        const storedSettings = localStorage.getItem("nexus_checkout_settings");
         if (storedSettings) {
-            this.lemonSettings = JSON.parse(storedSettings);
+            this.checkoutSettings = JSON.parse(storedSettings);
         }
     },
 
@@ -99,7 +99,7 @@ const State = {
     },
 
     saveSettings() {
-        localStorage.setItem("nexus_lemon_settings", JSON.stringify(this.lemonSettings));
+        localStorage.setItem("nexus_checkout_settings", JSON.stringify(this.checkoutSettings));
     },
 
     // Add Order
@@ -190,8 +190,9 @@ const DOM = {
     dashProductsCount: document.getElementById("dash-products-count"),
     productsTableBody: document.getElementById("dash-products-table-body"),
     ordersTableBody: document.getElementById("dash-orders-table-body"),
-    lemonOverlayCheckbox: document.getElementById("lemon-overlay-mode"),
-    lemonOverlayLabel: document.getElementById("lemon-overlay-label"),
+    checkoutOverlayCheckbox: document.getElementById("gumroad-overlay-mode"),
+    checkoutOverlayLabel: document.getElementById("gumroad-overlay-label"),
+    gumroadTrigger: document.getElementById("gumroad-trigger"),
     
     // Product Crud Form Modal
     modalProductForm: document.getElementById("modal-product-form"),
@@ -367,10 +368,15 @@ function openProductDetail(id) {
         // Track the current product checkout process
         State.currentCheckoutProduct = product;
         
-        // If Lemon Squeezy / Gumroad checkout link is set, redirect or open overlay
+        // If Gumroad checkout link is set, redirect or open overlay
         if (product.checkoutUrl && (product.checkoutUrl.startsWith("http://") || product.checkoutUrl.startsWith("https://"))) {
-            if (State.lemonSettings.overlayMode && window.LemonSqueezy) {
-                window.LemonSqueezy.Url.Open(product.checkoutUrl);
+            if (State.checkoutSettings.overlayMode) {
+                if (DOM.gumroadTrigger) {
+                    DOM.gumroadTrigger.setAttribute("href", product.checkoutUrl);
+                    DOM.gumroadTrigger.click();
+                } else {
+                    window.open(product.checkoutUrl, '_blank');
+                }
             } else {
                 window.open(product.checkoutUrl, '_blank');
             }
@@ -523,10 +529,10 @@ function renderDashboard() {
     const conversionRate = (State.orders.length / estimatedVisitors) * 100;
     DOM.dashConversion.innerText = conversionRate.toFixed(2) + "%";
 
-    // Populate Lemon Squeezy config UI fields
-    if (DOM.lemonOverlayCheckbox) {
-        DOM.lemonOverlayCheckbox.checked = State.lemonSettings.overlayMode;
-        DOM.lemonOverlayLabel.innerText = State.lemonSettings.overlayMode ? "Abrir checkout flotante" : "Abrir checkout en pestaña nueva";
+    // Populate Gumroad config UI fields
+    if (DOM.checkoutOverlayCheckbox) {
+        DOM.checkoutOverlayCheckbox.checked = State.checkoutSettings.overlayMode;
+        DOM.checkoutOverlayLabel.innerText = State.checkoutSettings.overlayMode ? "Abrir checkout flotante" : "Abrir checkout en pestaña nueva";
     }
 
     // Populate Products table
@@ -777,10 +783,10 @@ window.deleteProduct = function(id) {
 };
 
 // 12. Settings Setup Forms (Autosave on change)
-if (DOM.lemonOverlayCheckbox) {
-    DOM.lemonOverlayCheckbox.addEventListener("change", (e) => {
-        State.lemonSettings.overlayMode = e.target.checked;
-        DOM.lemonOverlayLabel.innerText = e.target.checked ? "Abrir checkout flotante" : "Abrir checkout en pestaña nueva";
+if (DOM.checkoutOverlayCheckbox) {
+    DOM.checkoutOverlayCheckbox.addEventListener("change", (e) => {
+        State.checkoutSettings.overlayMode = e.target.checked;
+        DOM.checkoutOverlayLabel.innerText = e.target.checked ? "Abrir checkout flotante" : "Abrir checkout en pestaña nueva";
         State.saveSettings();
     });
 }
@@ -921,14 +927,14 @@ document.addEventListener("DOMContentLoaded", () => {
     bindEvents();
     renderStorefront();
 
-    // Setup Lemon Squeezy event handler overlay callbacks if SDK loaded
-    if (window.LemonSqueezy) {
-        window.LemonSqueezy.Setup({
-            eventHandler: (eventData) => {
-                console.log("Lemon Squeezy Event Received:", eventData);
-                if (eventData.event === 'Checkout.Success') {
-                    // Extract customer email and currently checkout product
-                    const customerEmail = eventData.data?.order?.customer_email || "cliente@lemonsqueezy.com";
+    // Listen to messages for Gumroad purchase completion events
+    window.addEventListener('message', (event) => {
+        if (event.data && typeof event.data === 'string') {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.post_message_name === 'sale') {
+                    console.log("Gumroad Purchase Event Received:", data);
+                    const customerEmail = data.email || "cliente@gumroad.com";
                     const product = State.currentCheckoutProduct;
                     if (product) {
                         State.addOrder(customerEmail, product);
@@ -937,9 +943,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (ViewRouter.currentTab === "dashboard") {
                             renderDashboard();
                         }
+                        renderStorefront();
                     }
                 }
+            } catch (e) {
+                // Ignore non-json messages
             }
-        });
-    }
+        }
+    });
 });

@@ -1456,8 +1456,8 @@ tr:last-child td {
     color: rgba(255, 255, 255, 0.35);
 }
 
-/* Lemon Squeezy Guide Styling */
-.lemon-info-box {
+/* Gumroad Guide Styling */
+.gumroad-info-box {
     background: rgba(99, 102, 241, 0.05);
     border: 1px solid rgba(99, 102, 241, 0.15);
     border-radius: var(--border-radius-md);
@@ -1465,19 +1465,19 @@ tr:last-child td {
     margin: 15px 0 20px;
 }
 
-.lemon-step {
+.gumroad-step {
     line-height: 1.5;
     color: var(--text-muted);
 }
 
-.lemon-step a {
+.gumroad-step a {
     color: hsl(243, 75%, 70%);
     text-decoration: none;
     transition: var(--transition-smooth);
     border-bottom: 1px dashed rgba(99, 102, 241, 0.4);
 }
 
-.lemon-step a:hover {
+.gumroad-step a:hover {
     color: hsl(243, 75%, 80%);
     border-bottom-style: solid;
 }

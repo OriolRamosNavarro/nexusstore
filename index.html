@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <!-- Lemon Squeezy SDK -->
-    <script src="https://assets.lemonsqueezy.com/lemon.js" defer></script>
+    <!-- Gumroad SDK -->
+    <script src="https://gumroad.com/js/gumroad.js" defer></script>
 </head>
 <body>
     <!-- Background Glows for Premium Aesthetic -->
@@ -142,31 +142,31 @@
                     </div>
                 </div>
 
-                <!-- Lemon Squeezy / Connection Settings -->
+                <!-- Gumroad / Connection Settings -->
                 <div class="settings-container glass-card">
                     <div class="card-header">
-                        <h4>Conexión con Lemon Squeezy <span class="badge badge-emerald">Legal y Seguro</span></h4>
-                        <i class="fa-solid fa-lemon text-indigo" style="font-size: 2.2rem;"></i>
+                        <h4>Conexión con Gumroad <span class="badge badge-emerald">Legal y Seguro</span></h4>
+                        <i class="fa-solid fa-store text-indigo" style="font-size: 2.2rem;"></i>
                     </div>
-                    <p class="settings-desc">Vende digitalmente de forma 100% legal en España sin ser autónomo. Lemon Squeezy actúa como tu <strong>Merchant of Record</strong>, gestionando las facturas e impuestos (IVA) automáticamente.</p>
+                    <p class="settings-desc">Vende digitalmente de forma 100% legal en España sin ser autónomo. Gumroad actúa como tu <strong>Merchant of Record</strong>, gestionando las facturas e impuestos (IVA) automáticamente.</p>
                     
-                    <div class="lemon-info-box">
-                        <div class="lemon-step" style="margin-bottom: 8px; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Paso 1:</strong> Regístrate en <a href="https://www.lemonsqueezy.com" target="_blank" style="color: hsl(243, 75%, 70%); text-decoration: none;">lemonsqueezy.com</a>.</div>
-                        <div class="lemon-step" style="margin-bottom: 8px; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Paso 2:</strong> Sube tu producto y copia el <em>Shareable Checkout Link</em>.</div>
-                        <div class="lemon-step" style="margin-bottom: 15px; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Paso 3:</strong> Edita tu producto en la tabla inferior y pega ese enlace.</div>
+                    <div class="gumroad-info-box">
+                        <div class="gumroad-step" style="margin-bottom: 8px; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Paso 1:</strong> Regístrate en <a href="https://www.gumroad.com" target="_blank" style="color: hsl(243, 75%, 70%); text-decoration: none;">gumroad.com</a>.</div>
+                        <div class="gumroad-step" style="margin-bottom: 8px; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Paso 2:</strong> Sube tu producto y copia el enlace de compra (ej. <em>https://gum.co/...</em>).</div>
+                        <div class="gumroad-step" style="margin-bottom: 15px; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Paso 3:</strong> Edita tu producto en la tabla inferior y pega ese enlace.</div>
                     </div>
 
                     <div class="form-group-toggle">
-                        <label>Overlay de Lemon Squeezy</label>
+                        <label>Overlay de Gumroad</label>
                         <div class="toggle-switch">
-                            <input type="checkbox" id="lemon-overlay-mode" checked>
-                            <label for="lemon-overlay-mode"></label>
-                            <span class="toggle-label" id="lemon-overlay-label">Abrir checkout flotante</span>
+                            <input type="checkbox" id="gumroad-overlay-mode" checked>
+                            <label for="gumroad-overlay-mode"></label>
+                            <span class="toggle-label" id="gumroad-overlay-label">Abrir checkout flotante</span>
                         </div>
                     </div>
                     
-                    <a href="https://app.lemonsqueezy.com" target="_blank" class="btn btn-primary btn-block" style="text-decoration: none;">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Panel de Lemon Squeezy
+                    <a href="https://gumroad.com" target="_blank" class="btn btn-primary btn-block" style="text-decoration: none;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Panel de Gumroad
                     </a>
                 </div>
             </div>
@@ -442,9 +442,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="prod-checkout-url">Enlace de Pago Lemon Squeezy / Gumroad (Opcional)</label>
-                    <input type="text" id="prod-checkout-url" placeholder="https://tu-tienda.lemonsqueezy.com/checkout/buy/..." value="">
-                    <span class="input-tip">Introduce tu enlace de checkout real de Lemon Squeezy. Si se deja en blanco, la tienda usará el modo simulado de prueba con tarjeta de crédito 3D.</span>
+                    <label for="prod-checkout-url">Enlace de Pago Gumroad (Opcional)</label>
+                    <input type="text" id="prod-checkout-url" placeholder="https://gumroad.com/l/... o https://gum.co/..." value="">
+                    <span class="input-tip">Introduce tu enlace de checkout real de Gumroad. Si se deja en blanco, la tienda usará el modo simulado de prueba con tarjeta de crédito 3D.</span>
                 </div>
 
                 <div class="form-group">
@@ -469,6 +469,9 @@
             <button class="btn btn-secondary btn-block mt-4" id="btn-close-legal-bottom">Entendido</button>
         </div>
     </div>
+
+     <!-- Hidden trigger link for Gumroad overlay -->
+    <a id="gumroad-trigger" class="gumroad-button" href="#" style="display: none;">Comprar</a>
 
     <!-- Script Application -->
     <script src="app.js"></script>
