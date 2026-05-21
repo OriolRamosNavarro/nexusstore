@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusStore - Tu Tienda Digital Premium</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Glows for Premium Aesthetic -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Header / Navigation -->
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="logo" id="btn-logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-cubes-split"></i>
+                </div>
+                <span class="logo-text">Nexus<span class="gradient-text">Store</span></span>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-link active" id="nav-store"><i class="fa-solid fa-store"></i> Tienda</button>
+                <button class="nav-link" id="nav-dashboard-trigger"><i class="fa-solid fa-chart-line"></i> Panel de Control</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <!-- SECTION 1: STOREFRONT (TIENDA CLIENTE) -->
+        <section id="section-store" class="app-section active">
+            <!-- Hero Banner -->
+            <div class="hero-section">
+                <span class="badge">Productos de Alto Valor</span>
+                <h1>Acelera tu conocimiento y <br><span class="gradient-text">lleva tus proyectos al siguiente nivel</span></h1>
+                <p class="hero-desc">Recursos digitales premium creados por profesionales para optimizar tu tiempo, desarrollo y productividad.</p>
+                <div class="hero-stats">
+                    <div class="h-stat"><i class="fa-solid fa-circle-check text-indigo"></i> Descargas Instantáneas</div>
+                    <div class="h-stat"><i class="fa-solid fa-circle-check text-indigo"></i> Acceso de por Vida</div>
+                    <div class="h-stat"><i class="fa-solid fa-circle-check text-indigo"></i> Pagos 100% Seguros</div>
+                </div>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="filters-bar glass-card">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="store-search" placeholder="Buscar productos digitales...">
+                </div>
+                <div class="category-filters" id="category-filters-container">
+                    <button class="filter-btn active" data-category="all">Todos</button>
+                    <button class="filter-btn" data-category="eBook">E-Books</button>
+                    <button class="filter-btn" data-category="Plantilla">Plantillas</button>
+                    <button class="filter-btn" data-category="Assets">Recursos UI</button>
+                    <button class="filter-btn" data-category="Software">Software</button>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="products-grid-container">
+                <!-- Products will be injected by JavaScript -->
+                <div class="loader-container">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CREATOR DASHBOARD (PANEL DEL CREADOR) -->
+        <section id="section-dashboard" class="app-section">
+            
+            <!-- Welcome Header -->
+            <div class="dashboard-header">
+                <div>
+                    <h2 class="dash-title">Hola de nuevo, <span class="gradient-text">Creador</span></h2>
+                    <p class="dash-subtitle">Aquí está el rendimiento de tu negocio digital hoy.</p>
+                </div>
+                <div class="dash-actions">
+                    <button class="btn btn-secondary" id="btn-logout"><i class="fa-solid fa-lock"></i> Cerrar Panel</button>
+                    <button class="btn btn-primary" id="btn-add-product-trigger"><i class="fa-solid fa-plus"></i> Crear Producto</button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card glass-card">
+                    <div class="stat-icon income-icon"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Ingresos Totales</span>
+                        <h3 class="stat-value" id="dash-revenue">€0.00</h3>
+                        <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +14.2% este mes</span>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-icon sales-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Ventas Totales</span>
+                        <h3 class="stat-value" id="dash-sales">0</h3>
+                        <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +8.1% vs ayer</span>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-icon conv-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Tasa de Conversión</span>
+                        <h3 class="stat-value" id="dash-conversion">3.85%</h3>
+                        <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.4% promedio</span>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-icon prod-icon"><i class="fa-solid fa-box-archive"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Productos Activos</span>
+                        <h3 class="stat-value" id="dash-products-count">0</h3>
+                        <span class="stat-trend">En venta en la tienda</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts & Analytics Section -->
+            <div class="dashboard-grid">
+                <!-- Sales Chart -->
+                <div class="chart-container glass-card">
+                    <div class="card-header">
+                        <h4>Rendimiento de Ventas</h4>
+                        <span class="badge">Historial de Ventas Recientes</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="salesChart" width="600" height="280"></canvas>
+                    </div>
+                </div>
+
+                <!-- Stripe / Connection Settings -->
+                <div class="settings-container glass-card">
+                    <div class="card-header">
+                        <h4>Conexión con Stripe <span class="badge badge-emerald">Dinero Real</span></h4>
+                        <i class="fa-brands fa-stripe stripe-brand-icon"></i>
+                    </div>
+                    <p class="settings-desc">Convierte esta tienda en un negocio real. Vincula tu cuenta de Stripe para cobrar a tus clientes con tarjeta de crédito en cualquier parte del mundo.</p>
+                    
+                    <form id="stripe-settings-form" onsubmit="event.preventDefault();">
+                        <div class="form-group-toggle">
+                            <label>Modo de Pasarela</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="stripe-mode" checked>
+                                <label for="stripe-mode"></label>
+                                <span class="toggle-label" id="stripe-mode-label">Entorno de Pruebas (Simulado)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stripe-pk">Clave Pública (Publishable Key)</label>
+                            <input type="password" id="stripe-pk" placeholder="pk_test_..." value="pk_sandbox_key_placeholder">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stripe-sk">Clave Secreta (Secret Key)</label>
+                            <input type="password" id="stripe-sk" placeholder="sk_test_..." value="sk_sandbox_key_placeholder">
+                        </div>
+
+                        <button class="btn btn-primary btn-block" id="btn-save-stripe">
+                            <i class="fa-solid fa-floppy-disk"></i> Guardar Configuración de Stripe
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Manage Products & Recent Transactions -->
+            <div class="dashboard-grid-wide">
+                <!-- Products Table -->
+                <div class="table-container glass-card">
+                    <div class="card-header">
+                        <h4>Inventario de Productos</h4>
+                        <button class="btn btn-sm btn-primary" id="btn-add-product-table"><i class="fa-solid fa-plus"></i> Añadir</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Categoría</th>
+                                    <th>Precio</th>
+                                    <th>Ventas</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-products-table-body">
+                                <!-- Products rows injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="table-container glass-card">
+                    <div class="card-header">
+                        <h4>Ventas Recientes</h4>
+                        <span class="badge badge-indigo">Registro de Clientes</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Producto</th>
+                                    <th>Importe</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-orders-table-body">
+                                <!-- Order rows injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <div class="footer-left">
+                <span class="logo-text">Nexus<span class="gradient-text">Store</span></span>
+                <p class="footer-desc-text">Plataforma premium para la distribución de contenido y activos digitales. Construido con seguridad legal y escalabilidad comercial.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" id="link-terms">Términos del Servicio</a>
+                <a href="#" id="link-privacy">Política de Privacidad y Cookies</a>
+                <a href="#" id="link-legal">Aviso Legal (España)</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 NexusStore. Todos los derechos reservados. Todos los pagos simulados no conllevan cobros reales hasta activar la API de Stripe.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: PASSCODE LOCK (ACCESO DASHBOARD) -->
+    <div class="modal" id="modal-passcode">
+        <div class="modal-content glass-card max-w-sm">
+            <div class="modal-close" id="btn-close-passcode"><i class="fa-solid fa-xmark"></i></div>
+            <div class="text-center">
+                <div class="modal-icon-header"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Área Privada del Creador</h3>
+                <p class="modal-desc">Ingresa la contraseña de acceso al panel de administración para ver analíticas y gestionar productos.</p>
+            </div>
+            <form id="passcode-form">
+                <div class="form-group">
+                    <label for="admin-passcode">Contraseña del Administrador</label>
+                    <input type="password" id="admin-passcode" placeholder="Contraseña por defecto: admin" required>
+                    <span class="error-msg" id="passcode-error">Contraseña incorrecta. Inténtalo de nuevo.</span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Desbloquear Panel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: PRODUCT DETAIL (DETALLE DE PRODUCTO) -->
+    <div class="modal" id="modal-product-detail">
+        <div class="modal-content glass-card max-w-lg">
+            <div class="modal-close" id="btn-close-detail"><i class="fa-solid fa-xmark"></i></div>
+            <div class="product-detail-layout" id="product-detail-content">
+                <!-- Dynamically filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CHECKOUT GATEWAY (PASARELA DE PAGO INTERACTIVA) -->
+    <div class="modal" id="modal-checkout">
+        <div class="modal-content glass-card max-w-md checkout-modal-content">
+            <div class="modal-close" id="btn-close-checkout"><i class="fa-solid fa-xmark"></i></div>
+            
+            <div class="checkout-header">
+                <h3>Completar Compra</h3>
+                <div class="product-mini-preview" id="checkout-prod-preview">
+                    <!-- Dynamic preview -->
+                </div>
+            </div>
+
+            <!-- Simulated Credit Card Display -->
+            <div class="credit-card-container">
+                <div class="credit-card" id="credit-card">
+                    <div class="card-front">
+                        <div class="card-chip"></div>
+                        <div class="card-logo-stripe"><i class="fa-brands fa-stripe"></i></div>
+                        <div class="card-number-display" id="cc-number-display">•••• •••• •••• ••••</div>
+                        <div class="card-holder-layout">
+                            <div>
+                                <div class="card-label">CLIENTE</div>
+                                <div class="card-holder-display" id="cc-name-display">TU NOMBRE AQUÍ</div>
+                            </div>
+                            <div>
+                                <div class="card-label">CADUCA</div>
+                                <div class="card-date-display" id="cc-date-display">MM/AA</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <div class="card-magnetic-strip"></div>
+                        <div class="card-signature-area">
+                            <div class="card-label-back">CVC</div>
+                            <div class="card-cvc-display" id="cc-cvc-display">•••</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Form -->
+            <form id="checkout-payment-form">
+                <div class="form-group">
+                    <label for="cust-email">Correo Electrónico *</label>
+                    <input type="email" id="cust-email" placeholder="nombre@correo.com" required>
+                    <span class="input-tip">Aquí enviaremos el enlace de descarga inmediato.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust-name">Nombre Completo en la Tarjeta *</label>
+                    <input type="text" id="cust-name" placeholder="Juan Pérez" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust-cc">Número de Tarjeta de Crédito *</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-credit-card"></i>
+                        <input type="text" id="cust-cc" placeholder="4000 1234 5678 9010" maxlength="19" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label for="cust-exp">Vencimiento *</label>
+                        <input type="text" id="cust-exp" placeholder="MM/AA" maxlength="5" required>
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="cust-cvc">CVC / CVV *</label>
+                        <input type="password" id="cust-cvc" placeholder="123" maxlength="4" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust-zip">Código Postal *</label>
+                    <input type="text" id="cust-zip" placeholder="08001" maxlength="10" required>
+                </div>
+
+                <div class="checkout-total-row">
+                    <span>Total a Pagar:</span>
+                    <span class="total-price-text" id="checkout-price-total">€0.00</span>
+                </div>
+
+                <!-- Stripe / simulated security notice -->
+                <div class="stripe-badge-notice">
+                    <i class="fa-solid fa-shield-halved text-emerald"></i>
+                    <span>Conexión cifrada segura SSL de 256 bits.</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-pay-now">
+                    <span id="btn-pay-text"><i class="fa-solid fa-lock"></i> Pagar y Descargar</span>
+                    <span id="btn-pay-loader" class="spinner btn-spinner hidden"></span>
+                </button>
+            </form>
+
+            <!-- Success State Screen (Initially Hidden) -->
+            <div class="checkout-success-view hidden" id="checkout-success-screen">
+                <div class="success-icon-container">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3>¡Pago Completado con Éxito!</h3>
+                <p class="success-desc">Hemos verificado el pago simulado. Tu descarga digital está lista para bajar ahora mismo. También se ha enviado una copia a tu correo.</p>
+                
+                <div class="download-box glass-card">
+                    <div class="dl-info">
+                        <i class="fa-solid fa-file-arrow-down text-indigo"></i>
+                        <div>
+                            <strong id="dl-product-name">Archivo Digital</strong>
+                            <span class="file-size">Tamaño: ~14.5 MB</span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn btn-emerald btn-sm" id="btn-download-file" download><i class="fa-solid fa-download"></i> Descargar</a>
+                </div>
+                
+                <button class="btn btn-secondary btn-block mt-4" id="btn-success-close">Volver a la Tienda</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: CREATOR ADD/EDIT PRODUCT (FORMULARIO PRODUCTO) -->
+    <div class="modal" id="modal-product-form">
+        <div class="modal-content glass-card max-w-md">
+            <div class="modal-close" id="btn-close-prod-form"><i class="fa-solid fa-xmark"></i></div>
+            <h3 id="prod-form-title">Añadir Nuevo Producto</h3>
+            <p class="modal-desc" id="prod-form-desc">Ingresa los datos para listar un producto en tu escaparate digital.</p>
+            
+            <form id="product-crud-form">
+                <input type="hidden" id="prod-id">
+
+                <div class="form-group">
+                    <label for="prod-name">Nombre del Producto *</label>
+                    <input type="text" id="prod-name" placeholder="Ej. Ebook de Marketing Digital" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label for="prod-category">Categoría *</label>
+                        <select id="prod-category" required>
+                            <option value="eBook">E-Book</option>
+                            <option value="Plantilla">Plantilla</option>
+                            <option value="Assets">Recursos UI</option>
+                            <option value="Software">Software</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="prod-price">Precio (€) *</label>
+                        <input type="number" id="prod-price" placeholder="Ej. 19.99" step="0.01" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-description">Descripción Corta *</label>
+                    <textarea id="prod-description" placeholder="Describe brevemente de qué trata tu producto y qué valor aporta al comprador..." rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-features">Características (Separadas por comas) *</label>
+                    <input type="text" id="prod-features" placeholder="Ej. 120 páginas, Archivo PDF, Soporte incluido" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-image-select">Imagen del Producto *</label>
+                    <select id="prod-image-select" required>
+                        <option value="assets/ai_ebook_cover.png">E-Book de Inteligencia Artificial (Generada)</option>
+                        <option value="assets/notion_template.png">Plantilla Notion Premium (Generada)</option>
+                        <option value="assets/glass_icons_3d.png">Iconos 3D de Interfaz (Generada)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-download-url">Archivo de Descarga (URL o Enlace) *</label>
+                    <input type="text" id="prod-download-url" placeholder="https://mi-servidor.com/archivo-digital.zip" value="#" required>
+                    <span class="input-tip">Enlace de descarga directa que recibirá el cliente tras pagar.</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" id="btn-save-product-form">Guardar Producto</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 5: LEGAL MODAL (TEXTOS LEGALES Y DE SEGURIDAD) -->
+    <div class="modal" id="modal-legal">
+        <div class="modal-content glass-card max-w-lg">
+            <div class="modal-close" id="btn-close-legal"><i class="fa-solid fa-xmark"></i></div>
+            <h3 id="legal-title">Información Legal</h3>
+            <div class="legal-scroll-box" id="legal-text-content">
+                <!-- Dynamic legal text filled by JS -->
+            </div>
+            <button class="btn btn-secondary btn-block mt-4" id="btn-close-legal-bottom">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Script Application -->
+    <script src="app.js"></script>
+</body>
+</html>
