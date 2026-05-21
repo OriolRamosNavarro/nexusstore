@@ -13,31 +13,7 @@ const DEFAULT_PRODUCTS = [
         features: "180 páginas en PDF/ePub, Scripts listos para usar, Ejemplos de prompts avanzados, Actualizaciones gratis",
         image: "assets/ai_ebook_cover.png",
         downloadUrl: "assets/ai_ebook_cover.png",
-        checkoutUrl: "",
-        salesCount: 0
-    },
-    {
-        id: "prod-2",
-        name: "Notion OS: Plantilla de Productividad Extrema",
-        category: "Plantilla",
-        price: 29.00,
-        description: "Un sistema organizativo integral para Notion. Gestiona proyectos, finanzas personales, objetivos anuales y hábitos diarios utilizando las metodologías GTD (Getting Things Done) y PARA más eficientes.",
-        features: "Estructura GTD/PARA integrada, Tracker financiero automatizado, Videotutorial de uso, Soporte premium",
-        image: "assets/notion_template.png",
-        downloadUrl: "assets/notion_template.png",
-        checkoutUrl: "",
-        salesCount: 0
-    },
-    {
-        id: "prod-3",
-        name: "Glassmorphism UI Icons 3D Pack",
-        category: "Assets",
-        price: 14.50,
-        description: "Paquete premium de 50 iconos 3D flotantes de estilo vidrio esmerilado con reflexiones realistas. Ideal para elevar la calidad visual de tus páginas de aterrizaje, presentaciones e interfaces móviles.",
-        features: "50 archivos PNG transparentes, Archivos fuente Blender (.blend), Renderizados a 4K de resolución, Licencia comercial ilimitada",
-        image: "assets/glass_icons_3d.png",
-        downloadUrl: "assets/glass_icons_3d.png",
-        checkoutUrl: "",
+        checkoutUrl: "https://24462997140.gumroad.com/l/fwitnu?wanted=true",
         salesCount: 0
     }
 ];
@@ -56,7 +32,7 @@ const State = {
     // Load from localStorage or set defaults
     init() {
         // Force reset/clear on first load of this new version
-        const resetKey = "nexus_reset_v4";
+        const resetKey = "nexus_reset_v5";
         if (!localStorage.getItem(resetKey)) {
             localStorage.removeItem("nexus_products");
             localStorage.removeItem("nexus_orders");
