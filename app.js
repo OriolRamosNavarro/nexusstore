@@ -14,7 +14,7 @@ const DEFAULT_PRODUCTS = [
         image: "assets/ai_ebook_cover.png",
         downloadUrl: "assets/ai_ebook_cover.png",
         checkoutUrl: "",
-        salesCount: 38
+        salesCount: 0
     },
     {
         id: "prod-2",
@@ -26,7 +26,7 @@ const DEFAULT_PRODUCTS = [
         image: "assets/notion_template.png",
         downloadUrl: "assets/notion_template.png",
         checkoutUrl: "",
-        salesCount: 22
+        salesCount: 0
     },
     {
         id: "prod-3",
@@ -38,17 +38,11 @@ const DEFAULT_PRODUCTS = [
         image: "assets/glass_icons_3d.png",
         downloadUrl: "assets/glass_icons_3d.png",
         checkoutUrl: "",
-        salesCount: 15
+        salesCount: 0
     }
 ];
 
-const DEFAULT_ORDERS = [
-    { id: "tx_12345", date: "2026-05-18 10:24", customer: "sofia.lopez@example.com", product: "Ebook: Manual de Automatización con IA", amount: 19.99, status: "Completado" },
-    { id: "tx_12346", date: "2026-05-19 14:15", customer: "carlos.gomez@example.com", product: "Notion OS: Plantilla de Productividad Extrema", amount: 29.00, status: "Completado" },
-    { id: "tx_12347", date: "2026-05-20 09:02", customer: "marta.sanz@example.com", product: "Glassmorphism UI Icons 3D Pack", amount: 14.50, status: "Completado" },
-    { id: "tx_12348", date: "2026-05-20 18:40", customer: "david.marin@example.com", product: "Ebook: Manual de Automatización con IA", amount: 19.99, status: "Completado" },
-    { id: "tx_12349", date: "2026-05-21 11:10", customer: "lucia.ortiz@example.com", product: "Notion OS: Plantilla de Productividad Extrema", amount: 29.00, status: "Completado" }
-];
+const DEFAULT_ORDERS = [];
 
 // 2. State Controller
 const State = {
@@ -61,6 +55,14 @@ const State = {
 
     // Load from localStorage or set defaults
     init() {
+        // Force reset/clear on first load of this new version
+        const resetKey = "nexus_reset_v4";
+        if (!localStorage.getItem(resetKey)) {
+            localStorage.removeItem("nexus_products");
+            localStorage.removeItem("nexus_orders");
+            localStorage.setItem(resetKey, "true");
+        }
+
         // Load Products
         const storedProducts = localStorage.getItem("nexus_products");
         if (storedProducts) {
@@ -590,13 +592,13 @@ function drawSalesChart() {
     ctx.clearRect(0, 0, width, height);
 
     // Dynamic trend points from actual orders or mock base points if sales are low
-    const baseTrend = [120, 240, 190, 310, 480, 600, 720]; // 7 days chart base
+    const baseTrend = [0, 0, 0, 0, 0, 0, 0]; // 7 days chart base
     
     // Add real last purchases to final node trend
     const recentRevenue = State.orders.slice(0, 5).reduce((acc, o) => acc + o.amount, 0);
     baseTrend[baseTrend.length - 1] += recentRevenue;
 
-    const maxVal = Math.max(...baseTrend) * 1.15;
+    const maxVal = (Math.max(...baseTrend) * 1.15) || 100;
     const minVal = 0;
 
     // Draw Grid Lines
@@ -796,8 +798,8 @@ DOM.passcodeForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const typedCode = DOM.passcodeField.value;
 
-    // Secret code default is 'admin' (User requested easy start)
-    if (typedCode === "admin" || typedCode === "creador123") {
+    // Secret code default is 'huevo2005' (User requested easy start)
+    if (typedCode === "huevo2005" || typedCode === "creador123") {
         DOM.modalPasscode.classList.remove("active");
         DOM.passcodeError.style.display = "none";
         sessionStorage.setItem("nexus_dashboard_unlocked", "true");
