@@ -915,6 +915,11 @@ tr:last-child td {
    MODAL WINDOWS & CHECKOUT
    ========================================================================== */
 
+/* Prevent body scrolling when a modal is active */
+body:has(.modal.active) {
+    overflow: hidden;
+}
+
 .modal {
     position: fixed;
     top: 0;
@@ -928,10 +933,11 @@ tr:last-child td {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 40px 20px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
+    overflow-y: auto; /* Allow scrolling within the modal container */
 }
 
 .modal.active {
@@ -940,6 +946,7 @@ tr:last-child td {
 }
 
 .modal-content {
+    margin: auto; /* Flexbox centering that plays nice with overflow-y scrolling */
     width: 100%;
     padding: 32px;
     position: relative;
