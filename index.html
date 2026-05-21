@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
+    <!-- Lemon Squeezy SDK -->
+    <script src="https://assets.lemonsqueezy.com/lemon.js" defer></script>
 </head>
 <body>
     <!-- Background Glows for Premium Aesthetic -->
@@ -140,38 +142,32 @@
                     </div>
                 </div>
 
-                <!-- Stripe / Connection Settings -->
+                <!-- Lemon Squeezy / Connection Settings -->
                 <div class="settings-container glass-card">
                     <div class="card-header">
-                        <h4>Conexión con Stripe <span class="badge badge-emerald">Dinero Real</span></h4>
-                        <i class="fa-brands fa-stripe stripe-brand-icon"></i>
+                        <h4>Conexión con Lemon Squeezy <span class="badge badge-emerald">Legal y Seguro</span></h4>
+                        <i class="fa-solid fa-lemon text-indigo" style="font-size: 2.2rem;"></i>
                     </div>
-                    <p class="settings-desc">Convierte esta tienda en un negocio real. Vincula tu cuenta de Stripe para cobrar a tus clientes con tarjeta de crédito en cualquier parte del mundo.</p>
+                    <p class="settings-desc">Vende digitalmente de forma 100% legal en España sin ser autónomo. Lemon Squeezy actúa como tu <strong>Merchant of Record</strong>, gestionando las facturas e impuestos (IVA) automáticamente.</p>
                     
-                    <form id="stripe-settings-form" onsubmit="event.preventDefault();">
-                        <div class="form-group-toggle">
-                            <label>Modo de Pasarela</label>
-                            <div class="toggle-switch">
-                                <input type="checkbox" id="stripe-mode" checked>
-                                <label for="stripe-mode"></label>
-                                <span class="toggle-label" id="stripe-mode-label">Entorno de Pruebas (Simulado)</span>
-                            </div>
-                        </div>
+                    <div class="lemon-info-box">
+                        <div class="lemon-step" style="margin-bottom: 8px; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Paso 1:</strong> Regístrate en <a href="https://www.lemonsqueezy.com" target="_blank" style="color: hsl(243, 75%, 70%); text-decoration: none;">lemonsqueezy.com</a>.</div>
+                        <div class="lemon-step" style="margin-bottom: 8px; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Paso 2:</strong> Sube tu producto y copia el <em>Shareable Checkout Link</em>.</div>
+                        <div class="lemon-step" style="margin-bottom: 15px; font-size: 0.85rem;"><i class="fa-solid fa-circle-check text-emerald"></i> <strong>Paso 3:</strong> Edita tu producto en la tabla inferior y pega ese enlace.</div>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="stripe-pk">Clave Pública (Publishable Key)</label>
-                            <input type="password" id="stripe-pk" placeholder="pk_test_..." value="pk_sandbox_key_placeholder">
+                    <div class="form-group-toggle">
+                        <label>Overlay de Lemon Squeezy</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="lemon-overlay-mode" checked>
+                            <label for="lemon-overlay-mode"></label>
+                            <span class="toggle-label" id="lemon-overlay-label">Abrir checkout flotante</span>
                         </div>
-
-                        <div class="form-group">
-                            <label for="stripe-sk">Clave Secreta (Secret Key)</label>
-                            <input type="password" id="stripe-sk" placeholder="sk_test_..." value="sk_sandbox_key_placeholder">
-                        </div>
-
-                        <button class="btn btn-primary btn-block" id="btn-save-stripe">
-                            <i class="fa-solid fa-floppy-disk"></i> Guardar Configuración de Stripe
-                        </button>
-                    </form>
+                    </div>
+                    
+                    <a href="https://app.lemonsqueezy.com" target="_blank" class="btn btn-primary btn-block" style="text-decoration: none;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Panel de Lemon Squeezy
+                    </a>
                 </div>
             </div>
 
@@ -446,9 +442,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="prod-download-url">Archivo de Descarga (URL o Enlace) *</label>
+                    <label for="prod-checkout-url">Enlace de Pago Lemon Squeezy / Gumroad (Opcional)</label>
+                    <input type="text" id="prod-checkout-url" placeholder="https://tu-tienda.lemonsqueezy.com/checkout/buy/..." value="">
+                    <span class="input-tip">Introduce tu enlace de checkout real de Lemon Squeezy. Si se deja en blanco, la tienda usará el modo simulado de prueba con tarjeta de crédito 3D.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-download-url">Archivo de Descarga (Para Modo Simulado) *</label>
                     <input type="text" id="prod-download-url" placeholder="https://mi-servidor.com/archivo-digital.zip" value="#" required>
-                    <span class="input-tip">Enlace de descarga directa que recibirá el cliente tras pagar.</span>
+                    <span class="input-tip">Enlace de descarga directa que se entregará al cliente tras la compra simulada.</span>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block" id="btn-save-product-form">Guardar Producto</button>

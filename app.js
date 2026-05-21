@@ -13,6 +13,7 @@ const DEFAULT_PRODUCTS = [
         features: "180 páginas en PDF/ePub, Scripts listos para usar, Ejemplos de prompts avanzados, Actualizaciones gratis",
         image: "assets/ai_ebook_cover.png",
         downloadUrl: "assets/ai_ebook_cover.png",
+        checkoutUrl: "",
         salesCount: 38
     },
     {
@@ -24,6 +25,7 @@ const DEFAULT_PRODUCTS = [
         features: "Estructura GTD/PARA integrada, Tracker financiero automatizado, Videotutorial de uso, Soporte premium",
         image: "assets/notion_template.png",
         downloadUrl: "assets/notion_template.png",
+        checkoutUrl: "",
         salesCount: 22
     },
     {
@@ -35,6 +37,7 @@ const DEFAULT_PRODUCTS = [
         features: "50 archivos PNG transparentes, Archivos fuente Blender (.blend), Renderizados a 4K de resolución, Licencia comercial ilimitada",
         image: "assets/glass_icons_3d.png",
         downloadUrl: "assets/glass_icons_3d.png",
+        checkoutUrl: "",
         salesCount: 15
     }
 ];
@@ -51,10 +54,8 @@ const DEFAULT_ORDERS = [
 const State = {
     products: [],
     orders: [],
-    stripeSettings: {
-        sandboxMode: true,
-        publishableKey: "pk_sandbox_key_placeholder",
-        secretKey: "sk_sandbox_key_placeholder"
+    lemonSettings: {
+        overlayMode: true
     },
     currentCheckoutProduct: null,
 
@@ -63,7 +64,11 @@ const State = {
         // Load Products
         const storedProducts = localStorage.getItem("nexus_products");
         if (storedProducts) {
-            this.products = JSON.parse(storedProducts);
+            // Defensive mapping to ensure checkoutUrl is present
+            this.products = JSON.parse(storedProducts).map(p => ({
+                checkoutUrl: "",
+                ...p
+            }));
         } else {
             this.products = [...DEFAULT_PRODUCTS];
             localStorage.setItem("nexus_products", JSON.stringify(this.products));
@@ -79,9 +84,9 @@ const State = {
         }
 
         // Load Settings
-        const storedSettings = localStorage.getItem("nexus_stripe_settings");
+        const storedSettings = localStorage.getItem("nexus_lemon_settings");
         if (storedSettings) {
-            this.stripeSettings = JSON.parse(storedSettings);
+            this.lemonSettings = JSON.parse(storedSettings);
         }
     },
 
@@ -94,7 +99,7 @@ const State = {
     },
 
     saveSettings() {
-        localStorage.setItem("nexus_stripe_settings", JSON.stringify(this.stripeSettings));
+        localStorage.setItem("nexus_lemon_settings", JSON.stringify(this.lemonSettings));
     },
 
     // Add Order
@@ -185,11 +190,8 @@ const DOM = {
     dashProductsCount: document.getElementById("dash-products-count"),
     productsTableBody: document.getElementById("dash-products-table-body"),
     ordersTableBody: document.getElementById("dash-orders-table-body"),
-    btnSaveStripe: document.getElementById("btn-save-stripe"),
-    stripeModeCheckbox: document.getElementById("stripe-mode"),
-    stripeModeLabel: document.getElementById("stripe-mode-label"),
-    stripePk: document.getElementById("stripe-pk"),
-    stripeSk: document.getElementById("stripe-sk"),
+    lemonOverlayCheckbox: document.getElementById("lemon-overlay-mode"),
+    lemonOverlayLabel: document.getElementById("lemon-overlay-label"),
     
     // Product Crud Form Modal
     modalProductForm: document.getElementById("modal-product-form"),
@@ -203,6 +205,7 @@ const DOM = {
     prodDescField: document.getElementById("prod-description"),
     prodFeaturesField: document.getElementById("prod-features"),
     prodImageSelect: document.getElementById("prod-image-select"),
+    prodCheckoutUrl: document.getElementById("prod-checkout-url"),
     prodDownloadUrl: document.getElementById("prod-download-url"),
     btnAddProductTrigger: document.getElementById("btn-add-product-trigger"),
     btnAddProductTable: document.getElementById("btn-add-product-table"),
@@ -360,7 +363,21 @@ function openProductDetail(id) {
     // Checkout Event inside Modal
     document.getElementById("btn-trigger-checkout").addEventListener("click", () => {
         DOM.modalDetail.classList.remove("active");
-        openCheckout(product);
+        
+        // Track the current product checkout process
+        State.currentCheckoutProduct = product;
+        
+        // If Lemon Squeezy / Gumroad checkout link is set, redirect or open overlay
+        if (product.checkoutUrl && (product.checkoutUrl.startsWith("http://") || product.checkoutUrl.startsWith("https://"))) {
+            if (State.lemonSettings.overlayMode && window.LemonSqueezy) {
+                window.LemonSqueezy.Url.Open(product.checkoutUrl);
+            } else {
+                window.open(product.checkoutUrl, '_blank');
+            }
+        } else {
+            // Fallback to simulated payment form
+            openCheckout(product);
+        }
     });
 }
 
@@ -506,11 +523,11 @@ function renderDashboard() {
     const conversionRate = (State.orders.length / estimatedVisitors) * 100;
     DOM.dashConversion.innerText = conversionRate.toFixed(2) + "%";
 
-    // Populate stripe config UI fields
-    DOM.stripeModeCheckbox.checked = State.stripeSettings.sandboxMode;
-    DOM.stripeModeLabel.innerText = State.stripeSettings.sandboxMode ? "Entorno de Pruebas (Simulado)" : "Entorno de Producción (Real)";
-    DOM.stripePk.value = State.stripeSettings.publishableKey;
-    DOM.stripeSk.value = State.stripeSettings.secretKey;
+    // Populate Lemon Squeezy config UI fields
+    if (DOM.lemonOverlayCheckbox) {
+        DOM.lemonOverlayCheckbox.checked = State.lemonSettings.overlayMode;
+        DOM.lemonOverlayLabel.innerText = State.lemonSettings.overlayMode ? "Abrir checkout flotante" : "Abrir checkout en pestaña nueva";
+    }
 
     // Populate Products table
     DOM.productsTableBody.innerHTML = State.products.map(p => `
@@ -692,12 +709,14 @@ function openProductForm(editId = null) {
         DOM.prodDescField.value = prod.description;
         DOM.prodFeaturesField.value = prod.features;
         DOM.prodImageSelect.value = prod.image;
+        DOM.prodCheckoutUrl.value = prod.checkoutUrl || "";
         DOM.prodDownloadUrl.value = prod.downloadUrl;
     } else {
         // Create mode
         DOM.prodFormTitle.innerText = "Añadir Nuevo Producto";
         DOM.prodFormDesc.innerText = "Ingresa los datos para listar un producto en tu escaparate digital.";
         DOM.prodIdField.value = "";
+        DOM.prodCheckoutUrl.value = "";
     }
 
     DOM.modalProductForm.classList.add("active");
@@ -713,6 +732,7 @@ DOM.productForm.addEventListener("submit", (e) => {
     const description = DOM.prodDescField.value;
     const features = DOM.prodFeaturesField.value;
     const image = DOM.prodImageSelect.value;
+    const checkoutUrl = DOM.prodCheckoutUrl.value;
     const downloadUrl = DOM.prodDownloadUrl.value;
 
     if (id) {
@@ -721,14 +741,14 @@ DOM.productForm.addEventListener("submit", (e) => {
         if (index !== -1) {
             State.products[index] = {
                 ...State.products[index],
-                name, category, price, description, features, image, downloadUrl
+                name, category, price, description, features, image, checkoutUrl, downloadUrl
             };
         }
     } else {
         // Add new product
         const newProduct = {
             id: "prod-" + Math.random().toString(36).substr(2, 9),
-            name, category, price, description, features, image, downloadUrl,
+            name, category, price, description, features, image, checkoutUrl, downloadUrl,
             salesCount: 0
         };
         State.products.push(newProduct);
@@ -756,20 +776,14 @@ window.deleteProduct = function(id) {
     }
 };
 
-// 12. Settings Setup Forms
-DOM.btnSaveStripe.addEventListener("click", () => {
-    State.stripeSettings.sandboxMode = DOM.stripeModeCheckbox.checked;
-    State.stripeSettings.publishableKey = DOM.stripePk.value;
-    State.stripeSettings.secretKey = DOM.stripeSk.value;
-
-    State.saveSettings();
-    alert("¡Configuración de Stripe guardada con éxito! La pasarela se adaptará a los nuevos parámetros.");
-    renderDashboard();
-});
-
-DOM.stripeModeCheckbox.addEventListener("change", (e) => {
-    DOM.stripeModeLabel.innerText = e.target.checked ? "Entorno de Pruebas (Simulado)" : "Entorno de Producción (Real)";
-});
+// 12. Settings Setup Forms (Autosave on change)
+if (DOM.lemonOverlayCheckbox) {
+    DOM.lemonOverlayCheckbox.addEventListener("change", (e) => {
+        State.lemonSettings.overlayMode = e.target.checked;
+        DOM.lemonOverlayLabel.innerText = e.target.checked ? "Abrir checkout flotante" : "Abrir checkout en pestaña nueva";
+        State.saveSettings();
+    });
+}
 
 // 13. Passcode Authentication Modal Logic
 DOM.passcodeForm.addEventListener("submit", (e) => {
@@ -906,4 +920,26 @@ document.addEventListener("DOMContentLoaded", () => {
     State.init();
     bindEvents();
     renderStorefront();
+
+    // Setup Lemon Squeezy event handler overlay callbacks if SDK loaded
+    if (window.LemonSqueezy) {
+        window.LemonSqueezy.Setup({
+            eventHandler: (eventData) => {
+                console.log("Lemon Squeezy Event Received:", eventData);
+                if (eventData.event === 'Checkout.Success') {
+                    // Extract customer email and currently checkout product
+                    const customerEmail = eventData.data?.order?.customer_email || "cliente@lemonsqueezy.com";
+                    const product = State.currentCheckoutProduct;
+                    if (product) {
+                        State.addOrder(customerEmail, product);
+                        
+                        // If we are currently in dashboard view, refresh table
+                        if (ViewRouter.currentTab === "dashboard") {
+                            renderDashboard();
+                        }
+                    }
+                }
+            }
+        });
+    }
 });
